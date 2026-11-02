@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantay Baha at Basura - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: '#164a38' } /* Deep forest green */
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-gray-100 flex items-center justify-center p-4 sm:p-8 font-sans antialiased">
+
+    <div class="bg-white rounded-[1.5rem] sm:rounded-[2rem] w-full max-w-[1100px] h-full max-h-[660px] flex flex-col md:flex-row p-3 sm:p-4 shadow-[0_20px_60px_-15px_rgba(15,41,34,0.25)] overflow-hidden">
+
+        <!-- Left Column -->
+        <div class="w-full md:w-[54%] flex flex-col justify-between h-full overflow-y-auto py-4 px-5 sm:px-8 lg:px-10 xl:px-14">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-2 text-brand font-extrabold text-sm tracking-tight">
+                <img src="static/images/logo.png" alt="Bantay Baha at Basura logo" class="h-8 w-8 object-contain">
+                <span>Bantay Baha at Basura</span>
+            </div>
+
+            <!-- Main Content -->
+            <div class="my-8 w-full max-w-sm">
+                <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight leading-[1.15] mb-2">
+                    <span class="block text-black">Safer communities,</span>
+                    <span class="block text-brand">start with awareness.</span>
+                </h1>
+
+                <p class="text-gray-500 text-xs sm:text-sm font-medium mb-2">
+                    Welcome back, please log in to monitor your jurisdiction.
+                </p>
+                <p class="text-gray-400 text-xs mb-6">
+                    For MDRRMO, barangay and LGU personnel. Residents receive alerts by SMS and don't need an account.
+                </p>
+
+                <!-- Error message (hidden by default) -->
+                <div id="error-box" role="alert" aria-live="polite"
+                     class="hidden mb-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs text-red-700">
+                    <svg class="w-4 h-4 mt-px shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="error-text"></span>
+                </div>
+
+                <!-- Form -->
+                <form id="login-form" action="dashboard.html" method="GET" class="space-y-4" novalidate>
+                    <div>
+                        <label for="email" class="block text-xs font-semibold text-gray-700 mb-1.5">Email address</label>
+                        <input id="email" name="email" type="email" autocomplete="username" placeholder="name@municipality.gov.ph"
+                            class="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors text-gray-900 placeholder-gray-400">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-xs font-semibold text-gray-700 mb-1.5">Password</label>
+                        <div class="relative">
+                            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password"
+                                class="w-full pl-4 pr-11 py-3 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors text-gray-900 placeholder-gray-400">
+                            <button type="button" id="toggle-pw" aria-label="Show password"
+                                class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-brand transition-colors focus:outline-none focus-visible:text-brand">
+                                <svg id="eye-open" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg id="eye-closed" class="w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <div class="relative flex items-center justify-center w-4 h-4">
+                                <input type="checkbox" name="remember" class="peer appearance-none w-4 h-4 border border-gray-300 rounded bg-white checked:bg-brand checked:border-brand transition-colors cursor-pointer">
+                                <svg class="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                            <span class="text-xs font-medium text-gray-500 group-hover:text-gray-700 transition-colors">Remember me</span>
+                        </label>
+                        <a href="#" class="text-xs font-medium text-gray-500 hover:text-brand transition-colors">Forgot Password?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="pt-2">
+                        <button id="submit-btn" type="submit"
+                            class="inline-flex items-center justify-center gap-2 bg-brand hover:bg-[#0f3326] disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold text-sm px-8 py-3 rounded-lg transition-colors shadow-lg shadow-brand/25">
+                            <svg id="spinner" class="hidden w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+                            <span id="btn-label">Sign In</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-xs text-gray-500 font-medium space-y-1">
+                <p>Don't have an account? <a href="#" class="text-brand font-bold hover:underline ml-1">Request Access</a></p>
+                <p class="text-gray-400">Need help? Contact your Municipal MDRRMO administrator.</p>
+            </div>
+        </div>
+
+        <!-- Right Column (image + caption) -->
+        <div class="hidden md:block md:w-[46%] h-full rounded-[1.25rem] lg:rounded-[1.5rem] overflow-hidden relative">
+            <img src="static/images/login-bg.jpg"
+                 alt="Rescuers helping residents in a flooded street"
+                 class="absolute inset-0 w-full h-full object-cover object-[65%_40%]">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0F2922]/90 via-[#0F2922]/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 lg:p-7 text-white">
+                <p class="text-base lg:text-lg font-bold leading-snug max-w-xs">Real-time river and drainage monitoring.</p>
+                <p class="text-xs text-white/75 mt-1.5 max-w-xs">Water-level sensing, clog detection and 1-hour flash flood forecasts for your LGU.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const email = document.getElementById('email');
+        const pw = document.getElementById('password');
+        const errBox = document.getElementById('error-box');
+        const errText = document.getElementById('error-text');
+        const btn = document.getElementById('submit-btn');
+        const spinner = document.getElementById('spinner');
+        const label = document.getElementById('btn-label');
+
+        function showError(msg) {
+            errText.textContent = msg;
+            errBox.classList.remove('hidden');
+        }
+        function setLoading(on) {
+            btn.disabled = on;
+            spinner.classList.toggle('hidden', !on);
+            label.textContent = on ? 'Signing in...' : 'Sign In';
+        }
+
+        // Show / hide password
+        document.getElementById('toggle-pw').addEventListener('click', (e) => {
+            const show = pw.type === 'password';
+            pw.type = show ? 'text' : 'password';
+            document.getElementById('eye-open').classList.toggle('hidden', show);
+            document.getElementById('eye-closed').classList.toggle('hidden', !show);
+            e.currentTarget.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        });
+
+        // Form validation and route to dashboard simulation
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errBox.classList.add('hidden');
+            
+            if (!email.value.trim() || !pw.value) {
+                showError('Enter your email address and password.');
+                return;
+            }
+            if (!email.checkValidity()) {
+                showError('Enter a valid email address.');
+                return;
+            }
+
+            setLoading(true);
+
+            // Simulates quick validation delay then directs user to the dashboard view
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 800);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Accounts & Roles - Bantay Baha at Basura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { brand: '#164a38', brandDark: '#0f3326', darkSidebar: '#111814' }
+                }
+            }
+        }
+    </script>
+    <style id="sidebar-css">
+        #sidebar { width: 16rem; transition: width .3s ease; }
+        #sidebar[data-state="collapsed"] { width: 5rem; }
+        #sidebar .sb-divider { display: none; }
+        #sidebar .sb-chev-ico { transition: transform .2s ease; }
+        #admin-toggle[aria-expanded="true"] .sb-chev-ico { transform: rotate(90deg); }
+        #sidebar[data-state="collapsed"] .sb-text,
+        #sidebar[data-state="collapsed"] .sb-label,
+        #sidebar[data-state="collapsed"] .sb-chev,
+        #sidebar[data-state="collapsed"] .sb-sub { display: none; }
+        #sidebar[data-state="collapsed"] .sb-divider { display: block; }
+        #sidebar[data-state="collapsed"] .sb-item { justify-content: center; padding-left: 0; padding-right: 0; gap: 0; }
+        #sidebar[data-state="collapsed"] .sb-head { flex-direction: column; gap: .75rem; }
+        #sidebar[data-state="collapsed"] #sidebar-toggle { margin-left: 0; }
+        #sidebar[data-state="collapsed"] .sb-toggle-ico { transform: rotate(180deg); }
+        #sidebar[data-state="collapsed"] .sb-profile { justify-content: center; }
+        #sidebar nav { scrollbar-width: thin; scrollbar-color: #24302a transparent; }
+    </style>
+</head>
+<body class="bg-[#F4F6F8] text-[#1E2923] antialiased min-h-screen flex selection:bg-brand selection:text-white">
+
+    <!-- Collapsible Sidebar -->
+    <aside id="sidebar" data-state="expanded" class="bg-darkSidebar text-gray-300 flex flex-col sticky top-0 h-screen z-50 shrink-0 overflow-hidden border-r border-gray-800 shadow-2xl">
+
+        <!-- Header: logo, name, collapse toggle -->
+        <div class="sb-head flex items-center gap-3 px-4 pt-5 pb-4 border-b border-white/5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-900/40 ring-1 ring-white/10 flex items-center justify-center shrink-0 overflow-hidden p-1">
+                <img src="static/images/logo.png" alt="Bantay Baha at Basura logo" class="w-full h-full object-contain">
+            </div>
+            <span class="sb-text text-[13px] font-extrabold text-white leading-tight tracking-tight">Bantay Baha at Basura</span>
+            <button type="button" id="sidebar-toggle" class="ml-auto p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60" aria-expanded="true" title="Collapse sidebar">
+                <svg class="sb-toggle-ico w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Main navigation">
+            <p class="sb-label px-3 pb-1 text-[11px] font-semibold text-gray-500">Overview</p>
+            <a href="dashboard.html" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Dashboard"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span class="sb-text whitespace-nowrap">Dashboard</span></a>
+            <a href="monitoringmaps.html" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Monitoring Map"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg><span class="sb-text whitespace-nowrap">Monitoring Map</span></a>
+            <a href="alerts.html" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Active Alerts"><span class="relative inline-flex"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span class="absolute -top-0.5 -right-0.5 flex h-2 w-2" aria-label="New alerts"><span class="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span></span></span><span class="sb-text whitespace-nowrap">Active Alerts</span></a>
+            <a href="reports&logs.html" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Reports &amp; Logs"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><span class="sb-text whitespace-nowrap">Reports &amp; Logs</span></a>
+
+            <div class="sb-divider h-px bg-white/5 mx-2 my-2"></div>
+            <p class="sb-label px-3 pt-4 pb-1 text-[11px] font-semibold text-gray-500">System</p>
+            <div class="relative"><a href="systemadministration.html" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-200 hover:bg-white/5 hover:text-white pr-10" title="Administration"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="sb-text whitespace-nowrap">Administration</span></a><button type="button" id="admin-toggle" class="sb-chev absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60" aria-expanded="true" aria-controls="admin-sub" title="Show or hide administration pages"><svg class="w-4 h-4 sb-chev-ico shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7"/></svg></button></div>
+            <div id="admin-sub" class="sb-sub ml-[1.65rem] mt-1 pl-3 border-l border-white/10 space-y-1"><a href="settings-hardware.html" class="sb-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Hardware and Sensors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><span class="sb-text whitespace-nowrap">Hardware and Sensors</span></a><a href="settings-integrations.html" class="sb-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Integration and Feeds"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="sb-text whitespace-nowrap">Integration and Feeds</span></a><a href="settings-users.html" class="sb-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-emerald-400/20 bg-emerald-800/50 font-semibold text-white" title="Account and Roles" aria-current="page"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span class="sb-text whitespace-nowrap">Account and Roles</span></a><a href="settings-health.html" class="sb-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12.5px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white" title="Health and Logs"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span class="sb-text whitespace-nowrap">Health and Logs</span></a></div>
+        </nav>
+
+        <!-- Footer: sign out + profile -->
+        <div class="px-3 pb-6 pt-3 border-t border-white/5 space-y-2">
+            <button type="button" data-action="signout" class="sb-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] border transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 border-transparent font-medium text-gray-400 hover:bg-white/5 hover:text-white w-full text-left hover:!bg-red-500/10 hover:!text-red-400" title="Sign Out"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg><span class="sb-text whitespace-nowrap">Sign Out</span></button>
+            <button type="button" data-href="preferences.html" class="sb-profile w-full flex items-center gap-2.5 p-1.5 rounded-xl text-left transition hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60" title="Preferences">
+                <span class="w-10 h-10 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center shrink-0 overflow-hidden shadow border border-gray-700">
+                    <svg class="w-6 h-6 mt-2 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                </span>
+                <span class="sb-text min-w-0 block">
+                    <span class="block text-xs font-bold text-white truncate leading-tight">Provincial Head</span>
+                    <span class="block text-[10px] text-gray-400 truncate leading-tight mt-0.5">dylanconcepcion@provhead.com</span>
+                </span>
+            </button>
+        </div>
+    </aside>
+    <script>
+        // Sidebar: collapse/expand (remembered between pages) + Administration submenu
+        (function () {
+            var sb = document.getElementById('sidebar');
+            var btn = document.getElementById('sidebar-toggle');
+            var KEY = 'bbah-sidebar';
+            function setState(s) {
+                sb.setAttribute('data-state', s);
+                btn.setAttribute('aria-expanded', String(s === 'expanded'));
+                btn.title = s === 'expanded' ? 'Collapse sidebar' : 'Expand sidebar';
+            }
+            var saved = null;
+            try { saved = localStorage.getItem(KEY); } catch (e) {}
+            if (!saved) { try { saved = (JSON.parse(localStorage.getItem('bbah-prefs') || '{}')).sidebar || null; } catch (e) {} }
+            setState(saved === 'collapsed' ? 'collapsed' : 'expanded');
+            btn.addEventListener('click', function () {
+                var next = sb.getAttribute('data-state') === 'expanded' ? 'collapsed' : 'expanded';
+                setState(next);
+                try { localStorage.setItem(KEY, next); } catch (e) {}
+            });
+            sb.addEventListener('transitionend', function (e) {
+                if (e.propertyName === 'width') window.dispatchEvent(new Event('resize'));
+            });
+            var at = document.getElementById('admin-toggle');
+            var panel = document.getElementById('admin-sub');
+            if (at && panel) {
+                at.addEventListener('click', function () {
+                    var opening = panel.hasAttribute('hidden');
+                    if (opening) panel.removeAttribute('hidden'); else panel.setAttribute('hidden', '');
+                    at.setAttribute('aria-expanded', String(opening));
+                });
+            }
+        })();
+    </script>
+
+    <!-- Main Wrapper -->
+    <div class="flex-grow flex flex-col min-w-0">
+        
+        <!-- Top Nav Bar with Consistent Profile Dropdown -->
+        <header class="bg-white border-b border-gray-200 h-20 flex items-center justify-between px-8 sticky top-0 z-40 shadow-xs">
+            <div></div>
+
+            <!-- Profile Dropdown Container -->
+            <div class="relative">
+                <button id="profile-menu-btn" class="flex items-center space-x-3 border-l pl-4 border-gray-200 focus:outline-none cursor-pointer group py-1">
+                    <div class="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center font-bold text-xs shadow-sm group-hover:ring-2 group-hover:ring-brand/50 transition">DC</div>
+                    <div class="hidden md:block text-left">
+                        <p class="text-xs font-bold text-[#0F2922] group-hover:text-brand transition">Dylan Concepcion</p>
+                        <p class="text-[10px] text-gray-400 font-medium">Provincial Head</p>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-brand transition ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+
+                <!-- Dropdown Popup Box -->
+                <div id="profile-dropdown" class="hidden absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                    <div class="px-4 py-3 border-b border-gray-100">
+                        <p class="text-xs font-extrabold text-[#0F2922]">Dylan Concepcion</p>
+                        <p class="text-[11px] text-gray-400">dylanconcepcion@provhead.com</p>
+                    </div>
+                    <div class="py-1 text-xs font-semibold text-gray-700">
+                        <a href="preferences.html" class="w-full text-left flex items-center px-4 py-2.5 hover:bg-emerald-50 hover:text-brand transition gap-3">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            Preferences
+                        </a>
+                        <button type="button" data-action="help" class="w-full text-left flex items-center px-4 py-2.5 hover:bg-emerald-50 hover:text-brand transition gap-3">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Help &amp; Support
+                        </button>
+                        <button type="button" data-action="report-problem" class="w-full text-left flex items-center px-4 py-2.5 hover:bg-emerald-50 hover:text-brand transition gap-3">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            Report a Problem
+                        </button>
+                    </div>
+                    <div class="border-t border-gray-100 pt-1 mt-1">
+                        <button type="button" data-action="signout" class="w-full text-left flex items-center px-4 py-2.5 hover:bg-red-50 text-red-600 transition gap-3 text-xs font-bold">
+                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- USER ACCOUNTS & ROLES CONTENT AREA -->
+        <main class="max-w-6xl mx-auto px-6 py-10 flex-grow w-full space-y-8">
+            
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-gray-200 pb-4 gap-4">
+                <div>
+                    <nav data-breadcrumb="Account &amp; Roles"></nav>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-[#164a38] tracking-tight">User Accounts & Roles</h1>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Manage municipal officers, barangay disaster captains, system permission clearances, and access levels.</p>
+                </div>
+                <button class="px-4 py-2 bg-brand hover:bg-brandDark text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer" type="button" data-action="add-row">
+                    + Add New User
+                </button>
+            </div>
+
+            <!-- SECTION: User Accounts Table -->
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-gray-400">Registered System Personnel</h3>
+                    <span class="text-xs font-semibold text-brand bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">Placeholder Active Officers</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="text-gray-400 bg-gray-50 border-b border-gray-100 uppercase text-[10px] font-bold tracking-wider">
+                                <th class="py-3 px-4">Officer Name</th>
+                                <th class="py-3 px-4">Access Role</th>
+                                <th class="py-3 px-4">Jurisdiction / Sector</th>
+                                <th class="py-3 px-4">Status</th>
+                                <th class="py-3 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-gray-700">
+                            <tr>
+                                <td class="py-3 px-4 font-bold text-[#0F2922]">Dylan Concepcion</td>
+                                <td class="py-3 px-4 font-semibold text-brand">Provincial Head</td>
+                                <td class="py-3 px-4">Provincial Telemetry HQ</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold rounded-md text-[10px]">Active</span></td>
+                                <td class="py-3 px-4 text-right space-x-1">
+                                    <button class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 font-bold rounded-lg transition" type="button" data-action="edit">Edit</button>
+                                    <button class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-lg transition" type="button" data-action="revoke">Revoke</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-bold text-[#0F2922]">Placeholder</td>
+                                <td class="py-3 px-4 font-semibold text-gray-700">Barangay Captain</td>
+                                <td class="py-3 px-4">Placeholder</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold rounded-md text-[10px]">Active</span></td>
+                                <td class="py-3 px-4 text-right space-x-1">
+                                    <button class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 font-bold rounded-lg transition" type="button" data-action="edit">Edit</button>
+                                    <button class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-lg transition" type="button" data-action="revoke">Revoke</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-bold text-[#0F2922]">Placeholder</td>
+                                <td class="py-3 px-4 font-semibold text-gray-700">Telemetry Technician</td>
+                                <td class="py-3 px-4">Placeholder</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-extrabold rounded-md text-[10px]">Away</span></td>
+                                <td class="py-3 px-4 text-right space-x-1">
+                                    <button class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 font-bold rounded-lg transition" type="button" data-action="edit">Edit</button>
+                                    <button class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-lg transition" type="button" data-action="revoke">Revoke</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Sidebar behaviour lives in the <script> right after the <aside>.
+
+        const profileBtn = document.getElementById('profile-menu-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        window.addEventListener('click', () => {
+            if (!profileDropdown.classList.contains('hidden')) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    <script src="static/js/app.js" defer></script>
+</body>
+</html>
