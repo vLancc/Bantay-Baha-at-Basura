@@ -161,7 +161,7 @@
       if (!ok) return;
       store.del('bbah-session');
       toast('Signed out', 'info');
-      setTimeout(function () { location.href = 'LOGIN.html'; }, 400);
+      setTimeout(function () { location.href = 'index.html'; }, 400);
     });
   }
 
