@@ -161,7 +161,7 @@
       if (!ok) return;
       store.del('bbah-session');
       toast('Signed out', 'info');
-      setTimeout(function () { location.href = 'index.html'; }, 400);
+      setTimeout(function () { location.href = 'LOGIN.html'; }, 400);
     });
   }
 
@@ -207,7 +207,7 @@
     'status level': ['Low', 'Medium', 'High', 'Critical'],
     'status': ['Active', 'Away', 'Revoked'],
     'telemetry status': ['Optimal Flow', 'Clog Warning', 'Critical Rise', 'Offline'],
-    'access role': ['Provincial Head', 'Municipal Officer', 'Barangay Captain', 'Telemetry Technician']
+    'access role': ['Provincial Head', 'Municipal Officer', 'Barangay Captain']
   };
   var ENTITY = { 'reports&logs.html': 'report log', 'settings-hardware.html': 'sensor node', 'settings-users.html': 'user' };
   var ADD_DEFAULTS = { 'last ping': 'Just now' };
