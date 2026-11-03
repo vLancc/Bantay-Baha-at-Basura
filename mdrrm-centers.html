@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evacuation Centers - Bantay Baha at Basura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { brand: '#164a38', brandDark: '#0f3326', darkSidebar: '#111814' }
+                }
+            }
+        }
+    </script>
+</head>
+<body data-mdrrm-page="centers" class="bg-[#F4F6F8] text-[#1E2923] antialiased min-h-screen flex selection:bg-brand selection:text-white">
+
+    <!-- Sidebar and top bar are rendered by static/js/mdrrm-shell.js (MDRRM Officer navigation) -->
+    <aside id="sidebar" data-state="expanded" class="bg-darkSidebar w-64 shrink-0 sticky top-0 h-screen"></aside>
+
+    <div id="mdrrm-wrap" class="flex-grow flex flex-col min-w-0">
+        <header class="bg-white border-b border-gray-200 h-20 sticky top-0 z-40 shadow-xs"></header>
+
+        <main class="max-w-6xl px-6 py-10 mx-auto flex-grow w-full">
+            <nav data-breadcrumb="Evacuation Centers" data-breadcrumb-root="MDRRM Operations" data-breadcrumb-root-href="mdrrm-dashboard.html"></nav>
+            <div id="mdrrm-content" class="space-y-6"></div>
+        </main>
+    </div>
+
+    <script src="static/js/app.js"></script>
+    <script src="static/js/mdrrm-shell.js"></script>
+    <script src="static/js/mdrrm-pages.js"></script>
+</body>
+</html>

@@ -655,10 +655,21 @@
       confirmLabel: 'Reset data', danger: true
     }).then(function (ok) {
       if (!ok) return;
-      store.keys().forEach(function (k) { if (/^bbah-(table|toggles|warning|problem)/.test(k)) store.del(k); });
+      store.keys().forEach(function (k) { if (/^bbah-(table|toggles|warning|problem|mdrrm)/.test(k)) store.del(k); });
       toast('Demo data reset');
     });
   }
+
+  /* ---------- shared helpers for role-specific pages (mdrrm.js) ---------- */
+  window.BBAH = { modal: modal, confirmDialog: confirmDialog, toast: toast, esc: esc, mk: mk, store: store, INPUT: INPUT, LABEL: LABEL, downloadFile: downloadFile, csvCell: csvCell, slug: slug };
+
+  /* ---------- role guard (each role is kept to its own pages) ---------- */
+  (function () {
+    var sess = store.get('bbah-session', null);
+    var shared = { 'index.html': 1, 'preferences.html': 1 };
+    var own = { mdrrm: ['mdrrm-', 'mdrrm-dashboard.html'], captain: ['brgy-', 'brgy-dashboard.html'] }[sess && sess.role];
+    if (own && PAGE.indexOf(own[0]) !== 0 && !shared[PAGE]) location.replace(own[1]);
+  })();
 
   /* ---------- click routing ---------- */
   document.addEventListener('click', function (e) {
@@ -721,19 +732,21 @@
 
     document.querySelectorAll('nav[data-breadcrumb]').forEach(function (nav) {
         var current = nav.getAttribute('data-breadcrumb');
+        var rootLabel = nav.getAttribute('data-breadcrumb-root') || 'Administration';
+        var rootHref = nav.getAttribute('data-breadcrumb-root-href') || OVERVIEW_URL;
         nav.className = 'bb-crumb';
         nav.setAttribute('aria-label', 'Breadcrumb');
         nav.textContent = '';
         function span(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
         if (!current) {
-            var only = span('bb-current', 'Administration');
+            var only = span('bb-current', rootLabel);
             only.setAttribute('aria-current', 'page');
             nav.appendChild(only);
             return;
         }
         var a = document.createElement('a');
-        a.href = OVERVIEW_URL;
-        a.textContent = 'Administration';
+        a.href = rootHref;
+        a.textContent = rootLabel;
         nav.appendChild(a);
         var sep = span('bb-sep', '/');
         sep.setAttribute('aria-hidden', 'true');

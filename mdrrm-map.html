@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Map - Bantay Baha at Basura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS for the Actual Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { brand: '#164a38', brandDark: '#0f3326', darkSidebar: '#111814' }
+                }
+            }
+        }
+    </script>
+    <style>
+        .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif; z-index: 10; }
+        .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .leaflet-popup-content { font-size: 12px; margin: 12px 16px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    </style>
+    <style id="sidebar-css">
+        #sidebar { width: 16rem; transition: width .3s ease; }
+        #sidebar[data-state="collapsed"] { width: 5rem; }
+        #sidebar .sb-divider { display: none; }
+        #sidebar .sb-chev-ico { transition: transform .2s ease; }
+        #admin-toggle[aria-expanded="true"] .sb-chev-ico { transform: rotate(90deg); }
+        #sidebar[data-state="collapsed"] .sb-text,
+        #sidebar[data-state="collapsed"] .sb-label,
+        #sidebar[data-state="collapsed"] .sb-chev,
+        #sidebar[data-state="collapsed"] .sb-sub { display: none; }
+        #sidebar[data-state="collapsed"] .sb-divider { display: block; }
+        #sidebar[data-state="collapsed"] .sb-item { justify-content: center; padding-left: 0; padding-right: 0; gap: 0; }
+        #sidebar[data-state="collapsed"] .sb-head { flex-direction: column; gap: .75rem; }
+        #sidebar[data-state="collapsed"] #sidebar-toggle { margin-left: 0; }
+        #sidebar[data-state="collapsed"] .sb-toggle-ico { transform: rotate(180deg); }
+        #sidebar[data-state="collapsed"] .sb-profile { justify-content: center; }
+        #sidebar nav { scrollbar-width: thin; scrollbar-color: #24302a transparent; }
+    </style>
+</head>
+<body data-mdrrm-page="map" class="bg-[#F4F6F8] text-[#1E2923] antialiased min-h-screen flex selection:bg-brand selection:text-white">
+
+    <!-- Sidebar and top bar are rendered by static/js/mdrrm-shell.js (MDRRM Officer navigation) -->
+    <aside id="sidebar" data-state="expanded" class="bg-darkSidebar w-64 shrink-0 sticky top-0 h-screen"></aside>
+
+    <div id="mdrrm-wrap" class="flex-grow flex flex-col min-w-0">
+        <header class="bg-white border-b border-gray-200 h-20 sticky top-0 z-40 shadow-xs"></header>
+
+        <!-- MAP & SIDEBAR CONTENT AREA -->
+        <main class="max-w-[90rem] mx-auto px-6 py-6 flex-grow w-full flex flex-col space-y-4">
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-[#164a38] tracking-tight">Municipal Monitoring Map</h1>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Live GIS telemetry and active drainage sensor pins across Bulacan.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-200 shadow-sm flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span> GPS Stream Active
+                    </span>
+                </div>
+            </div>
+
+            <!-- CSS Grid for Map (Left) and Data Sidebar (Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow min-h-[600px]">
+                
+                <!-- Left: Massive Map Container (Spans 3 columns) -->
+                <div class="lg:col-span-3 bg-white p-2 rounded-2xl border border-gray-200 shadow-sm relative flex flex-col z-10">
+                    <div id="map" class="w-full h-full rounded-xl z-10 flex-grow relative bg-gray-100"></div>
+
+                    <!-- Floating Map Info Legend Card -->
+                    <div class="absolute bottom-6 left-6 z-20 bg-white/95 backdrop-blur-md px-5 py-4 rounded-xl border border-gray-200 shadow-xl text-sm space-y-2 w-72 pointer-events-auto">
+                        <p class="font-extrabold text-[#0F2922] border-b border-gray-100 pb-2">Primary Alert Feed</p>
+                        <div class="pt-1">
+                            <p class="text-gray-500 text-xs font-bold uppercase mb-0.5">Location</p>
+                            <p class="font-bold text-brand">Placeholder</p>
+                        </div>
+                        <div class="pt-1">
+                            <p class="text-gray-500 text-xs font-bold uppercase mb-0.5">Condition</p>
+                            <p class="font-extrabold text-red-600 animate-pulse">Critical Water Rise</p>
+                        </div>
+                    </div>
+
+                    <!-- Top Right Legend -->
+                    <div class="absolute top-4 right-4 z-20 bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-2 text-xs font-semibold text-gray-700 pointer-events-auto">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500 shadow-inner"></span> Low</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 shadow-inner"></span> Medium</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500 shadow-inner"></span> High</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-600 shadow-inner animate-pulse"></span> Critical</span>
+                    </div>
+                </div>
+
+                <!-- Right: Telemetry Sidebar (Spans 1 column) -->
+                <div class="lg:col-span-1 flex flex-col space-y-6">
+                    
+                    <!-- Environmental Context Widget -->
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                        <h3 class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-4 border-b border-gray-100 pb-2">Environmental Context</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-bold text-[#0F2922] flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg> Rain Intensity
+                                </span>
+                                <span class="text-xs font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded-md">Placeholder</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-bold text-[#0F2922] flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Tide Status
+                                </span>
+                                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-md">High Tide Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Node Health Overview -->
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                        <h3 class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-4 border-b border-gray-100 pb-2">Node Health Summary</h3>
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-emerald-50 py-2 rounded-xl border border-emerald-100">
+                                <p class="text-[10px] leading-7 font-black text-emerald-600">Placeholder</p>
+                                <p class="text-[10px] font-bold text-emerald-800 uppercase">Online</p>
+                            </div>
+                            <div class="bg-amber-50 py-2 rounded-xl border border-amber-100">
+                                <p class="text-[10px] leading-7 font-black text-amber-600">Placeholder</p>
+                                <p class="text-[10px] font-bold text-amber-800 uppercase">Warning</p>
+                            </div>
+                            <div class="bg-red-50 py-2 rounded-xl border border-red-100">
+                                <p class="text-[10px] leading-7 font-black text-red-600 animate-pulse">Placeholder</p>
+                                <p class="text-[10px] font-bold text-red-800 uppercase">Critical</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Event Feed -->
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex-grow flex flex-col max-h-[400px]">
+                        <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
+                            <h3 class="text-xs font-extrabold uppercase tracking-wider text-gray-400">Live Ping Feed</h3>
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
+                            </span>
+                        </div>
+                        
+                        <!-- Scrollable Feed -->
+                        <div class="overflow-y-auto custom-scroll space-y-4 pr-2">
+                            <!-- Alert Item -->
+                            <div class="flex flex-col border-l-2 border-red-500 pl-3">
+                                <span class="text-[10px] font-bold text-gray-400">Placeholder</span>
+                                <p class="text-sm font-bold text-[#0F2922]">Placeholder</p>
+                                <p class="text-xs text-red-600 font-medium">Placeholder</p>
+                                <button class="mt-2 self-start px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-[10px] font-bold rounded-lg transition border border-red-200" type="button" data-action="dispatch">Dispatch MDRRMO</button>
+                            </div>
+                            <!-- Alert Item -->
+                            <div class="flex flex-col border-l-2 border-amber-500 pl-3">
+                                <span class="text-[10px] font-bold text-gray-400">Placeholder</span>
+                                <p class="text-sm font-bold text-[#0F2922]">Placeholder</p>
+                                <p class="text-xs text-amber-600 font-medium">Placeholder</p>
+                                <button class="mt-2 self-start px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-[10px] font-bold rounded-lg transition border border-amber-200" type="button" data-action="log-warning">Log Warning</button>
+                            </div>
+                            <!-- Alert Item -->
+                            <div class="flex flex-col border-l-2 border-amber-500 pl-3">
+                                <span class="text-[10px] font-bold text-gray-400">Placeholder</span>
+                                <p class="text-sm font-bold text-[#0F2922]">Placeholder</p>
+                                <p class="text-xs text-amber-600 font-medium">Placeholder</p>
+                            </div>
+                            <!-- Standard Item -->
+                            <div class="flex flex-col border-l-2 border-emerald-500 pl-3 opacity-60">
+                                <span class="text-[10px] font-bold text-gray-400">Placeholder</span>
+                                <p class="text-sm font-bold text-[#0F2922]">Placeholder</p>
+                                <p class="text-xs text-gray-500 font-medium">Placeholder</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+        <div id="mdrrm-content" hidden></div>
+    </div>
+
+    <!-- Leaflet JS for the map interaction -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Initialize Map (Centered between Malolos and Balagtas)
+        const map = L.map('map', {
+            zoomControl: false 
+        }).setView([14.8300, 120.8500], 12);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        function createBreathingIcon(coreColor, pulseColor) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `
+                    <div class="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4">
+                        <span class="absolute inline-flex w-full h-full rounded-full ${pulseColor} opacity-75 animate-ping"></span>
+                        <span class="relative inline-flex rounded-full h-4 w-4 ${coreColor} border-2 border-white shadow-md"></span>
+                    </div>
+                `,
+                iconSize: [0, 0]
+            });
+        }
+
+        const criticalIcon = createBreathingIcon('bg-red-600', 'bg-red-400');
+        const highIcon = createBreathingIcon('bg-orange-500', 'bg-orange-400');
+        const mediumIcon = createBreathingIcon('bg-yellow-400', 'bg-yellow-300');
+        const lowIcon = createBreathingIcon('bg-emerald-500', 'bg-emerald-400');
+
+        function popup(level, textClass) {
+            return '<div class="font-bold text-[#0F2922] text-sm mb-1">Placeholder</div><div class="' + textClass + ' font-bold mb-1">' + level + '</div><div class="text-gray-500">Placeholder</div>';
+        }
+
+        // Plotting Nodes on the map (placeholder data, risk levels: Low / Medium / High / Critical)
+        L.marker([14.8433, 120.8114], {icon: criticalIcon}).addTo(map).bindPopup(popup('Critical', 'text-red-600'));
+        L.marker([14.8180, 120.8710], {icon: highIcon}).addTo(map).bindPopup(popup('High', 'text-orange-600'));
+        L.marker([14.8286, 120.8821], {icon: lowIcon}).addTo(map).bindPopup(popup('Low', 'text-emerald-600'));
+        L.marker([14.7953, 120.9250], {icon: mediumIcon}).addTo(map).bindPopup(popup('Medium', 'text-yellow-600'));
+        L.marker([14.7944, 120.8794], {icon: lowIcon}).addTo(map).bindPopup(popup('Low', 'text-emerald-600'));
+    </script>
+    <script src="static/js/app.js"></script>
+    <script src="static/js/mdrrm-shell.js"></script>
+    <script src="static/js/mdrrm-pages.js"></script>
+</body>
+</html>
